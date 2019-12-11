@@ -28,7 +28,7 @@ function App() {
   //Only get the secret word once when the app mounts
   React.useEffect(
       () => {hookActions.getSecretWord(setSecretWord())},
-      []
+      []  //[] indicates do not re-render since no piece of state was changed
   );
 
   if(!state.secretWord){
