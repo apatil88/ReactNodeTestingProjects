@@ -3,6 +3,7 @@ import React from 'react';
 const successContext = React.createContext();
 
 /**
+ * Custom hook
  * @function useSuccess
  * @returns {array} successContext value, which is a state of [value, setter].
  */
