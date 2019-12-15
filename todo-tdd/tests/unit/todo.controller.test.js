@@ -7,6 +7,7 @@ const allTodos = require("../mock-data/all-todos.json");
 // mock creation of TodoModel. Note: we are not testing whether Mongoose actually creates a model.
 TodoModel.create = jest.fn();
 TodoModel.find = jest.fn();
+TodoModel.findById = jest.fn();
 
 let req, res, next;
 
@@ -76,6 +77,35 @@ describe("TodoController.getTodos", () => {
     const rejectedPromise = Promise.reject(errorMessage);
     TodoModel.find.mockReturnValue(rejectedPromise);
     await TodoController.getTodos(req, res, next);
+    expect(next).toBeCalledWith(errorMessage);
+  });
+});
+
+describe("TodoController.getTodoById", () => {
+  it("should have a getTodoById function", () => {
+    expect(typeof TodoController.getTodoById).toBe("function");
+  });
+
+  it("should call TodoModel.findTodoById", async () => {
+    // set route param on request object
+    req.params.todoId = "5df57e9a9c6a3c188ab4f89b";
+    await TodoController.getTodoById(req, res, next);
+    expect(TodoModel.findById).toBeCalledWith("5df57e9a9c6a3c188ab4f89b");
+  });
+
+  it("should return json body and response code 200", async () => {
+    TodoModel.findById.mockReturnValue(newTodo);
+    await TodoController.getTodoById(req, res, next);
+    expect(res.statusCode).toBe(200);
+    expect(res._isEndCalled()).toBeTruthy();
+    expect(res._getJSONData()).toStrictEqual(newTodo);
+  });
+
+  it("should handle errors in getTodoById", async () => {
+    const errorMessage = { message: "error finding TodoModel" };
+    const rejectedPromise = Promise.reject(errorMessage);
+    TodoModel.findById.mockReturnValue(rejectedPromise);
+    await TodoController.getTodoById(req, res, next);
     expect(next).toBeCalledWith(errorMessage);
   });
 });
