@@ -4,7 +4,7 @@ const newTodo = require("../mock-data/new-todo.json");
 const allTodos = require("../mock-data/all-todos.json");
 
 const endpointUrl = "/todos/";
-let firstTodo;
+let firstTodo, newTodoId;
 
 describe(endpointUrl, () => {
   it("GET " + endpointUrl, async () => {
@@ -38,6 +38,7 @@ describe(endpointUrl, () => {
     expect(response.statusCode).toBe(201);
     expect(response.body.title).toBe(newTodo.title);
     expect(response.body.done).toBe(newTodo.done);
+    newTodoId = response.body._id;
   });
 
   it(
@@ -53,4 +54,14 @@ describe(endpointUrl, () => {
       });
     }
   );
+
+  it("PUT " + endpointUrl, async () => {
+    const testTodo = { title: "Make Integration test", done: false };
+    const response = await request(app)
+      .put(endpointUrl + newTodoId)
+      .send(testTodo);
+    expect(response.statusCode).toBe(200);
+    expect(response.body.title).toBe(testTodo.title);
+    expect(response.body.done).toBe(testTodo.done);
+  });
 });

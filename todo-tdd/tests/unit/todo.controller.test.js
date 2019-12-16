@@ -5,10 +5,13 @@ const newTodo = require("../mock-data/new-todo.json");
 const allTodos = require("../mock-data/all-todos.json");
 
 // mock creation of TodoModel. Note: we are not testing whether Mongoose actually creates a model.
-TodoModel.create = jest.fn();
+/*TodoModel.create = jest.fn();
 TodoModel.find = jest.fn();
 TodoModel.findById = jest.fn();
 TodoModel.findByIdAndUpdate = jest.fn();
+TodoModel.findOneAndDelete = jest.fn();*/
+
+jest.mock("../../model/todo.model.js");
 
 let req, res, next;
 let todoId = "5df57e9a9c6a3c188ab4f89b";
